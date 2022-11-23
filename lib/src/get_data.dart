@@ -1,22 +1,18 @@
-import 'dart:convert';
 import 'dart:io';
 
-class GetData {
-  final String url;
-  final String? method;
-  final Map<String, String>? parameters;
-  final Map<String, String>? headers;
-  final String? format;
+import 'package:request/src/request_type.dart';
+import 'package:request/src/response_validaror.dart';
 
+class GetData extends RequestType with RequestValidatorMixin {
   GetData({
-    required this.url,
-    this.method,
-    this.parameters,
-    this.headers,
-    this.format,
+    required super.url,
+    super.parameters,
+    super.headers,
+    super.format,
   });
 
-  void getRequest() async {
+  @override
+  void sendRequest() async {
     HttpClient client = HttpClient();
     final uri = Uri.parse(url).replace(queryParameters: parameters);
     try {
@@ -39,32 +35,7 @@ class GetData {
         return request.close();
       });
 
-      switch (response.statusCode) {
-        case 200:
-          {
-            print("\x1B[32mВсе прошло удачно");
-          }
-          break;
-        case 400:
-          {
-            print("\x1B[31mДанные не верны");
-          }
-          break;
-        case 500:
-          {
-            print("\x1B[31mПроизошла неизвестная ошибка");
-          }
-          break;
-        case 403:
-          {
-            print("\x1B[31mУ Вас нету доступа на данный сервис");
-          }
-          break;
-        default:
-          {
-            print("\x1B[31mЧто-то пошло не так");
-          }
-      }
+      responseValidator(response);
     } on SocketException {
       print("\x1B[31mНет интернет соеденения или не правильный адрес ссылки!");
     }

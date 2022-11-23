@@ -1,24 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
-class PostData {
-  final String url;
-  final String? method;
-  final Map<String, String>? parameters;
-  final Map<String, String>? headers;
-  final Map<String, dynamic>? data;
-  final String? format;
+import 'package:request/src/request_type.dart';
+import 'package:request/src/response_validaror.dart';
 
+class PostData extends RequestType with RequestValidatorMixin {
   PostData({
-    required this.url,
-    this.method,
-    this.parameters,
-    this.headers,
-    this.data,
-    this.format,
+    required super.url,
+    super.data,
+    super.parameters,
+    super.headers,
+    super.format,
   });
 
-  void postRequest() async {
+  @override
+  void sendRequest() async {
     HttpClient client = HttpClient();
     final uri = Uri.parse(url).replace(queryParameters: parameters);
 
@@ -41,33 +37,6 @@ class PostData {
       request.headers.add("content-type", format!);
     }
     request.add(bodyBytes);
-    await request.close().then((response) {
-      switch (response.statusCode) {
-        case 200:
-          {
-            print("\x1B[32mВсе прошло удачно");
-          }
-          break;
-        case 400:
-          {
-            print("\x1B[31mДанные не верны");
-          }
-          break;
-        case 500:
-          {
-            print("\x1B[31mПроизошла неизвестная ошибка");
-          }
-          break;
-        case 403:
-          {
-            print("\x1B[31mУ Вас нету доступа на данный сервис");
-          }
-          break;
-        default:
-          {
-            print("\x1B[31mЧто-то пошло не так");
-          }
-      }
-    });
+    await request.close().then((response) => responseValidator(response));
   }
 }

@@ -1,22 +1,20 @@
 import 'dart:convert';
 import 'dart:io';
 
-class DeleteData {
-  final String url;
-  final Map<String, String>? headers;
-  final Map<String, String>? parameters;
-  final Map<String, dynamic>? data;
-  final String? format;
+import 'package:request/src/request_type.dart';
+import 'package:request/src/response_validaror.dart';
 
+class DeleteData extends RequestType with RequestValidatorMixin {
   DeleteData({
-    required this.url,
-    this.headers,
-    this.parameters,
-    this.data,
-    this.format,
+    required super.url,
+    super.headers,
+    super.parameters,
+    super.data,
+    super.format,
   });
 
-  void deleteRequest() async {
+  @override
+  void sendRequest() async {
     HttpClient client = HttpClient();
     final uri = Uri.parse(url);
 
@@ -39,33 +37,6 @@ class DeleteData {
       request.headers.add("content-type", format!);
     }
     request.add(bodyBytes);
-    await request.close().then((response) {
-      switch (response.statusCode) {
-        case 200:
-          {
-            print("\x1B[32mВсе прошло удачно");
-          }
-          break;
-        case 400:
-          {
-            print("\x1B[31mДанные не верны");
-          }
-          break;
-        case 500:
-          {
-            print("\x1B[31mПроизошла неизвестная ошибка");
-          }
-          break;
-        case 403:
-          {
-            print("\x1B[31mУ Вас нету доступа на данный сервис");
-          }
-          break;
-        default:
-          {
-            print("\x1B[31mЧто-то пошло не так");
-          }
-      }
-    });
+    await request.close().then((response) => responseValidator(response));
   }
 }
