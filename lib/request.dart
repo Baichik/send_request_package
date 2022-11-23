@@ -21,49 +21,45 @@ class Request extends RequestType {
     switch (method) {
       case Method.get:
         {
-          GetData get = GetData(
+          GetData(
             url: url,
             parameters: parameters,
             headers: headers,
             format: format,
-          );
-          get.sendRequest();
+          ).sendRequest();
         }
         break;
       case Method.post:
         {
-          PostData post = PostData(
+          PostData(
             url: url,
             parameters: parameters,
             headers: headers,
             data: data,
             format: format,
-          );
-          post.sendRequest();
+          ).sendRequest();
         }
         break;
       case Method.put:
         {
-          PutData post = PutData(
+          PutData(
             url: url,
             parameters: parameters,
             headers: headers,
             data: data,
             format: format,
-          );
-          post.sendRequest();
+          ).sendRequest();
         }
         break;
       case Method.delete:
         {
-          DeleteData post = DeleteData(
+          DeleteData(
             url: url,
             parameters: parameters,
             headers: headers,
             data: data,
             format: format,
-          );
-          post.sendRequest();
+          ).sendRequest();
         }
         break;
       default:
