@@ -62,8 +62,6 @@ class Request extends RequestType {
           ).sendRequest();
         }
         break;
-      default:
-        print("\x1B[31mНе верный метод!");
     }
   }
 }
